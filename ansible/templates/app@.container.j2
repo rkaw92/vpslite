@@ -1,0 +1,14 @@
+[Unit]
+Description=Self-hosted app
+
+[Container]
+ContainerName=systemd-app-%i
+Image={{ app_docker_image }}
+Network=web.network:alias=app
+Network=infra.network
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

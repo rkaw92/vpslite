@@ -1,1 +1,1 @@
-/ansible/group_vars/*/vars
+/ansible/group_vars/*/*_vars

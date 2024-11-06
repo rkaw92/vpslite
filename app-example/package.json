@@ -1,0 +1,15 @@
+{
+  "name": "@rkaw92/vpslite-app-example",
+  "version": "1.0.0",
+  "description": "a hello world application to demonstrate running Node.js containers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robert Kawecki <robert+public@rkaw.pl>",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^5.1.0"
+  }
+}
