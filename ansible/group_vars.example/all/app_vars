@@ -1,0 +1,2 @@
+# Example image: runs a Node.js HTTP server that replies with JSON.
+app_docker_image: docker.io/rkaw92/vpslite-demo-node:latest
