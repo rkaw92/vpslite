@@ -2,7 +2,7 @@
 Description=Local Docker registry
 
 [Container]
-Image=registry:2
+Image={{ ver_registry_image }}
 Volume=/srv/volumes/registry-data:/var/lib/registry
 Network=web.network:alias=registry
 

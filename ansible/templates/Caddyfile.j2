@@ -10,7 +10,7 @@
 
 {{ registry_domain }} {
     basic_auth {
-		dev {{ registry_password_bcrypt | mandatory }}
+		dev {{ result_registry_password_hash.stdout }}
 	}
     reverse_proxy * registry:5000
 }

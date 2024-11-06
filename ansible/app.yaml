@@ -2,11 +2,14 @@
 - name: App container
   hosts: all
   tasks:
+  - name: Pull app container
+    containers.podman.podman_image:
+      name: '{{ app_docker_image }}'
+      state: present
   - name: Install unit file for app
     ansible.builtin.template:
       src: app@.container.j2
       dest: /etc/containers/systemd/app@.container
-  # TODO: Login to registry!
   - name: Enable app service in systemd
     ansible.builtin.systemd_service:
       name: app@1.service

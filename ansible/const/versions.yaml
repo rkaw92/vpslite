@@ -1,0 +1,3 @@
+---
+ver_caddy_image: docker.io/library/caddy:2.8-alpine
+ver_registry_image: docker.io/library/registry:2

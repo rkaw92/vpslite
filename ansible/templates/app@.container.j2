@@ -6,6 +6,7 @@ ContainerName=systemd-app-%i
 Image={{ app_docker_image }}
 Network=web.network:alias=app
 Network=infra.network
+Pull=never
 
 [Service]
 Restart=always

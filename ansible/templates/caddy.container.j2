@@ -2,7 +2,7 @@
 Description=Caddy HTTP server and reverse proxy
 
 [Container]
-Image=docker.io/library/caddy:2.8-alpine
+Image={{ ver_caddy_image }}
 Volume=/srv/volumes/caddy-data:/data
 Volume=/srv/volumes/caddy-config/Caddyfile:/etc/caddy/Caddyfile
 Network=web.network:alias=caddy
