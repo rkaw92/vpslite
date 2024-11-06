@@ -1,0 +1,8 @@
+[Unit]
+Description=Podman network for infrastructure
+
+[Network]
+Subnet=10.87.0.0/17
+
+[Install]
+WantedBy=multi-user.target

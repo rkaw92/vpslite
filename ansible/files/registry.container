@@ -1,0 +1,13 @@
+[Unit]
+Description=Local Docker registry
+
+[Container]
+Image=registry:2
+Volume=/srv/volumes/registry-data:/var/lib/registry
+Network=web.network:alias=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

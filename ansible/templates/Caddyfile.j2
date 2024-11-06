@@ -1,0 +1,18 @@
+{% if web_domain is defined %}
+
+{{ web_domain }} {
+    reverse_proxy * app:3000
+}
+
+{% endif %}
+
+{% if registry_domain is defined %}
+
+{{ registry_domain }} {
+    basic_auth {
+		dev {{ registry_password_bcrypt | mandatory }}
+	}
+    reverse_proxy * registry:5000
+}
+
+{% endif %}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Caddy HTTP server and reverse proxy
+
+[Container]
+Image=docker.io/library/caddy:2.8-alpine
+Volume=/srv/volumes/caddy-data:/data
+Volume=/srv/volumes/caddy-config/Caddyfile:/etc/caddy/Caddyfile
+Network=web.network:alias=caddy
+PublishPort=80:80
+PublishPort=443:443
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
