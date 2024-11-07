@@ -8,6 +8,8 @@
 
 This project lets you run a containerized application on a cheap Virtual Private Server (VPS). It automates the set-up and maintenance of the app instance.
 
+**This is a work in progress. It works, but I'm still polishing some stuff around the edges.**
+
 Out-of-the-box, it gives you:
 * Reverse proxy with automatic HTTPS and certificate renewal
 * Private Docker registry
