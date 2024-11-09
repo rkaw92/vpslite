@@ -3,6 +3,8 @@ Description=Podman network for infrastructure
 
 [Network]
 Subnet=10.87.0.0/17
+Internal=true
+Options=com.docker.network.bridge.name=brint0
 
 [Install]
 WantedBy=multi-user.target
