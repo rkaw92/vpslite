@@ -5,6 +5,7 @@ Description=Local Docker registry
 Image={{ ver_registry_image }}
 Volume=/srv/volumes/registry-data:/var/lib/registry
 Network=web.network:alias=registry
+AutoUpdate=registry
 
 [Service]
 Restart=always
