@@ -63,27 +63,16 @@
       path: /srv/volumes/caddy-config
       state: directory
       mode: '0700'
+  - name: Make config file for caddy
+    ansible.builtin.file:
+      path: /srv/volumes/caddy-config/Caddyfile
+      state: touch
+      mode: '0600'
+    register: caddy_conf
   - name: Make sure caddy image is available
     containers.podman.podman_image:
       name: '{{ ver_caddy_image }}'
       state: present
-  - name: Hash password for basic auth
-    ansible.builtin.command:
-      argv:
-        - podman
-        - run
-        - '--rm'
-        - '{{ ver_caddy_image }}'
-        - caddy
-        - hash-password
-        - '-p' 
-        - '{{ registry_password }}'
-    register: result_registry_password_hash
-  - name: Make config file for caddy
-    ansible.builtin.template:
-      src: Caddyfile.j2
-      dest: /srv/volumes/caddy-config/Caddyfile
-    register: caddy_conf
   - name: Enable caddy service in systemd
     ansible.builtin.systemd_service:
       name: caddy.service
@@ -95,28 +84,3 @@
       name: caddy.service
       state: restarted
     when: caddy_conf.changed
-
-- name: Docker Image Registry
-  hosts: all
-  vars_files: const/versions.yaml
-  tasks:
-  - name: Install unit file for registry
-    ansible.builtin.template:
-      src: registry.container.j2
-      dest: /etc/containers/systemd/registry.container
-  - name: Prepare data volume for registry
-    ansible.builtin.file:
-      path: /srv/volumes/registry-data
-      state: directory
-      mode: '0700'
-  - name: Enable registry service in systemd
-    ansible.builtin.systemd_service:
-      name: registry.service
-      enabled: true
-      state: started
-      daemon_reload: true
-  - name: Login to local registry
-    containers.podman.podman_login:
-      username: dev
-      password: '{{ registry_password }}'
-      registry: '{{ registry_domain }}'

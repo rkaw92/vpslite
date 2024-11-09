@@ -16,3 +16,18 @@
       enabled: true
       state: started
       daemon_reload: true
+  - name: Add block to Caddyfile
+    ansible.builtin.blockinfile:
+      path: /srv/volumes/caddy-config/Caddyfile
+      prepend_newline: true
+      append_newline: true
+      block: |
+        {{ app_domain }} {
+            reverse_proxy * app:3000
+        }
+    register: result_caddy_conf
+  - name: Restart Caddy
+    ansible.builtin.systemd_service:
+      name: caddy.service
+      state: restarted
+    when: result_caddy_conf.changed

@@ -1,2 +1,4 @@
+# Domain name to expose the app on. Includes automatic HTTPS.
+app_domain: example.com
 # Example image: runs a Node.js HTTP server that replies with JSON.
 app_docker_image: docker.io/rkaw92/vpslite-demo-node:latest

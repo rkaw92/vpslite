@@ -1,0 +1,5 @@
+# Domain name for the Docker registry. This is also the image name prefix, for example:
+# registry.example.com/myapp:latest
+registry_domain: registry.example.com
+# Password for the registry. The username is always "dev".
+registry_password: CHANGEME
