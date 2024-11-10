@@ -51,8 +51,8 @@
   tasks:
   - name: Install unit file for caddy
     ansible.builtin.template:
-      src: caddy.container.j2
-      dest: /etc/containers/systemd/caddy.container
+      src: vpslite-caddy.container.j2
+      dest: /etc/containers/systemd/vpslite-caddy.container
   - name: Prepare data volume for caddy
     ansible.builtin.file:
       path: /srv/volumes/caddy-data
@@ -76,12 +76,12 @@
       state: present
   - name: Enable caddy service in systemd
     ansible.builtin.systemd_service:
-      name: caddy.service
+      name: vpslite-caddy.service
       enabled: true
       state: started
       daemon_reload: true
   - name: Restart caddy
     ansible.builtin.systemd_service:
-      name: caddy.service
+      name: vpslite-caddy.service
       state: restarted
     when: caddy_conf.changed

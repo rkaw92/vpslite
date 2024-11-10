@@ -8,11 +8,11 @@
       state: present
   - name: Install unit file for app
     ansible.builtin.template:
-      src: app@.container.j2
-      dest: /etc/containers/systemd/app@.container
+      src: vpslite-app@.container.j2
+      dest: /etc/containers/systemd/vpslite-app@.container
   - name: Enable app service in systemd
     ansible.builtin.systemd_service:
-      name: app@1.service
+      name: vpslite-app@1.service
       enabled: true
       state: started
       daemon_reload: true
@@ -29,6 +29,6 @@
     register: result_caddy_conf
   - name: Restart Caddy
     ansible.builtin.systemd_service:
-      name: caddy.service
+      name: vpslite-caddy.service
       state: restarted
     when: result_caddy_conf.changed

@@ -4,8 +4,8 @@
   tasks:
   - name: Install unit file for registry
     ansible.builtin.template:
-      src: registry.container.j2
-      dest: /etc/containers/systemd/registry.container
+      src: vpslite-registry.container.j2
+      dest: /etc/containers/systemd/vpslite-registry.container
   - name: Prepare data volume for registry
     ansible.builtin.file:
       path: /srv/volumes/registry-data
@@ -13,7 +13,7 @@
       mode: '0700'
   - name: Enable registry service in systemd
     ansible.builtin.systemd_service:
-      name: registry.service
+      name: vpslite-registry.service
       enabled: true
       state: started
       daemon_reload: true
@@ -45,7 +45,7 @@
     register: result_caddy_conf
   - name: Restart Caddy
     ansible.builtin.systemd_service:
-      name: caddy.service
+      name: vpslite-caddy.service
       state: restarted
     when: result_caddy_conf.changed
   - name: Login to local registry

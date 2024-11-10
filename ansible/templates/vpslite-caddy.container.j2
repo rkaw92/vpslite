@@ -2,6 +2,7 @@
 Description=Caddy HTTP server and reverse proxy
 
 [Container]
+ContainerName=vpslite-caddy
 Image={{ ver_caddy_image }}
 Volume=/srv/volumes/caddy-data:/data
 Volume=/srv/volumes/caddy-config/Caddyfile:/etc/caddy/Caddyfile

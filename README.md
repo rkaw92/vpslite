@@ -112,7 +112,7 @@ Other infrastructure containers are not auto-updated right now. See GitHub Issue
 
 ```sh
 podman pull <myappimage>
-systemctl restart app@1
+systemctl restart vpslite-app@1
 ```
 
 ### Logs
