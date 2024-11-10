@@ -1,0 +1,15 @@
+- name: Redis
+  hosts: all
+  vars_files: const/versions.yaml
+  tasks:
+    - name: Create redis container unit file
+      ansible.builtin.include_role:
+        name: container
+      vars:
+        name: vpslite-redis
+        create_volumes:
+          - /srv/volumes/redis-config
+          - /srv/volumes/redis-data
+        drop_files:
+          - src: redis.conf
+            dest: /srv/volumes/redis-config/redis.conf

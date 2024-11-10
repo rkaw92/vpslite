@@ -1,0 +1,18 @@
+[Unit]
+Description=Redis in-memory database
+
+[Container]
+ContainerName=vpslite-redis
+Image={{ ver_redis_image }}
+Exec=redis-server /usr/local/etc/redis/redis.conf
+User={{ container_uid }}
+Group=65534
+Volume=/srv/volumes/redis-data:/data
+Volume=/srv/volumes/redis-config:/usr/local/etc/redis
+Network=infra.network:alias=redis
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
