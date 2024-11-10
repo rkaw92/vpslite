@@ -34,6 +34,7 @@
       path: /srv/volumes/caddy-config/Caddyfile
       prepend_newline: true
       append_newline: true
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - registry playbook"
       block: |
         {{ registry_domain }} {
             basic_auth {

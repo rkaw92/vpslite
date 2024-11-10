@@ -21,6 +21,7 @@
       path: /srv/volumes/caddy-config/Caddyfile
       prepend_newline: true
       append_newline: true
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - app playbook"
       block: |
         {{ app_domain }} {
             reverse_proxy * app:3000
