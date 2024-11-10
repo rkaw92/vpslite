@@ -2,33 +2,32 @@
 - name: App container
   hosts: all
   tasks:
-  - name: Pull app container
-    containers.podman.podman_image:
-      name: '{{ app_docker_image }}'
-      state: present
-  - name: Install unit file for app
-    ansible.builtin.template:
-      src: vpslite-app@.container.j2
-      dest: /etc/containers/systemd/vpslite-app@.container
-  - name: Enable app service in systemd
-    ansible.builtin.systemd_service:
-      name: vpslite-app@1.service
-      enabled: true
-      state: started
-      daemon_reload: true
-  - name: Add block to Caddyfile
-    ansible.builtin.blockinfile:
-      path: /srv/volumes/caddy-config/Caddyfile
-      prepend_newline: true
-      append_newline: true
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - app playbook"
-      block: |
-        {{ app_domain }} {
-            reverse_proxy * app:3000
-        }
-    register: result_caddy_conf
-  - name: Restart Caddy
-    ansible.builtin.systemd_service:
-      name: vpslite-caddy.service
-      state: restarted
-    when: result_caddy_conf.changed
+    - name: Pull app container
+      containers.podman.podman_image:
+        name: '{{ app_docker_image }}'
+        state: present
+    - name: Install unit file for app
+      ansible.builtin.template:
+        src: vpslite-app@.container.j2
+        dest: /etc/containers/systemd/vpslite-app@.container
+        mode: '0600'
+    - name: Enable app service in systemd
+      ansible.builtin.systemd_service:
+        name: vpslite-app@1.service
+        enabled: true
+        state: started
+        daemon_reload: true
+    - name: Add block to Caddyfile
+      ansible.builtin.blockinfile:
+        path: /srv/volumes/caddy-config/Caddyfile
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - app playbook"
+        block: |
+          {{ app_domain }} {
+              reverse_proxy * app:3000
+          }
+      notify: Restart Caddy
+  handlers:
+    - name: Restart Caddy
+      ansible.builtin.systemd_service:
+        name: vpslite-caddy.service
+        state: restarted

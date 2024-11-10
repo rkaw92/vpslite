@@ -3,85 +3,99 @@
   hosts: all
   vars_files: const/versions.yaml
   tasks:
-  - name: Ensure all packages are upgraded
-    ansible.builtin.apt:
-      update_cache: true
-      upgrade: safe
-  - name: Install unattended-upgrades
-    ansible.builtin.apt:
-      name: unattended-upgrades
-      state: present
-  - name: Enable unattended-upgrades
-    ansible.builtin.copy:
-      src: 20auto-upgrades
-      dest: /etc/apt/apt.conf.d/20auto-upgrades
+    - name: Ensure all packages are upgraded
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: safe
+    - name: Install unattended-upgrades
+      ansible.builtin.apt:
+        name: unattended-upgrades
+        state: present
+    - name: Enable unattended-upgrades
+      ansible.builtin.copy:
+        src: 20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        mode: '0600'
+
+- name: System users
+  hosts: all
+  vars_files: const/versions.yaml
+  tasks:
+    - name: Create system user for running containers
+      ansible.builtin.user:
+        name: vpslite-container
+        system: true
 
 - name: Podman
   hosts: all
   vars_files: const/versions.yaml
   tasks:
-  - name: Install Podman
-    ansible.builtin.apt:
-      name: podman
-      state: present
-  - name: Install network definition for web
-    ansible.builtin.copy:
-      src: web.network
-      dest: /etc/containers/systemd/web.network
-  - name: Start web network
-    ansible.builtin.systemd_service:
-      name: web-network
-      enabled: true
-      state: started
-      daemon_reload: true
-  - name: Install network definition for infra
-    ansible.builtin.copy:
-      src: infra.network
-      dest: /etc/containers/systemd/infra.network
-  - name: Start infra network
-    ansible.builtin.systemd_service:
-      name: infra-network
-      enabled: true
-      state: started
-      daemon_reload: true
+    - name: Install Podman
+      ansible.builtin.apt:
+        name: podman
+        state: present
+    - name: Install network definition for web
+      ansible.builtin.copy:
+        src: web.network
+        dest: /etc/containers/systemd/web.network
+        mode: '0600'
+    - name: Start web network
+      ansible.builtin.systemd_service:
+        name: web-network
+        enabled: true
+        state: started
+        daemon_reload: true
+    - name: Install network definition for infra
+      ansible.builtin.copy:
+        src: infra.network
+        dest: /etc/containers/systemd/infra.network
+        mode: '0600'
+    - name: Start infra network
+      ansible.builtin.systemd_service:
+        name: infra-network
+        enabled: true
+        state: started
+        daemon_reload: true
 
 - name: Caddy reverse proxy
   hosts: all
   vars_files: const/versions.yaml
   tasks:
-  - name: Install unit file for caddy
-    ansible.builtin.template:
-      src: vpslite-caddy.container.j2
-      dest: /etc/containers/systemd/vpslite-caddy.container
-  - name: Prepare data volume for caddy
-    ansible.builtin.file:
-      path: /srv/volumes/caddy-data
-      state: directory
-      mode: '0700'
-  - name: Prepare config volume for caddy
-    ansible.builtin.file:
-      path: /srv/volumes/caddy-config
-      state: directory
-      mode: '0700'
-  - name: Make config file for caddy
-    ansible.builtin.copy:
-      src: Caddyfile
-      dest: /srv/volumes/caddy-config/Caddyfile
-      mode: '0600'
-      force: false
-    register: caddy_conf
-  - name: Make sure caddy image is available
-    containers.podman.podman_image:
-      name: '{{ ver_caddy_image }}'
-      state: present
-  - name: Enable caddy service in systemd
-    ansible.builtin.systemd_service:
-      name: vpslite-caddy.service
-      enabled: true
-      state: started
-      daemon_reload: true
-  - name: Restart caddy
-    ansible.builtin.systemd_service:
-      name: vpslite-caddy.service
-      state: restarted
-    when: caddy_conf.changed
+    - name: Install unit file for caddy
+      ansible.builtin.template:
+        src: vpslite-caddy.container.j2
+        dest: /etc/containers/systemd/vpslite-caddy.container
+        mode: '0600'
+    - name: Prepare data volume for caddy
+      ansible.builtin.file:
+        path: /srv/volumes/caddy-data
+        state: directory
+        mode: '0700'
+    - name: Prepare config volume for caddy
+      ansible.builtin.file:
+        path: /srv/volumes/caddy-config
+        state: directory
+        mode: '0700'
+    - name: Make config file for caddy
+      ansible.builtin.copy:
+        src: Caddyfile
+        dest: /srv/volumes/caddy-config/Caddyfile
+        mode: '0600'
+        force: false
+      notify: Restart Caddy
+    - name: Make sure caddy image is available
+      containers.podman.podman_image:
+        name: '{{ ver_caddy_image }}'
+        state: present
+    - name: Enable caddy service in systemd
+      ansible.builtin.systemd_service:
+        name: vpslite-caddy.service
+        enabled: true
+        state: started
+        daemon_reload: true
+  handlers:
+    - name: Restart Caddy
+      ansible.builtin.systemd_service:
+        name: vpslite-caddy.service
+        state: restarted
+      when: caddy_conf.changed
