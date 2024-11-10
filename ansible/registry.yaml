@@ -52,3 +52,6 @@
       username: dev
       password: '{{ registry_password }}'
       registry: '{{ registry_domain }}'
+    # The registry image pull and container start could take a while:
+    retries: 12
+    delay: 10
