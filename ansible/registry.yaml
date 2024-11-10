@@ -1,23 +1,13 @@
 - name: Docker Image Registry
   hosts: all
   vars_files: const/versions.yaml
+  roles:
+    - role: container
+      vars:
+        name: vpslite-registry
+        create_volumes:
+          - /srv/volumes/registry-data
   tasks:
-    - name: Install unit file for registry
-      ansible.builtin.template:
-        src: vpslite-registry.container.j2
-        dest: /etc/containers/systemd/vpslite-registry.container
-        mode: '0600'
-    - name: Prepare data volume for registry
-      ansible.builtin.file:
-        path: /srv/volumes/registry-data
-        state: directory
-        mode: '0700'
-    - name: Enable registry service in systemd
-      ansible.builtin.systemd_service:
-        name: vpslite-registry.service
-        enabled: true
-        state: started
-        daemon_reload: true
     - name: Hash password for basic auth to registry
       ansible.builtin.command:
         argv:

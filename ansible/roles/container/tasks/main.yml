@@ -1,0 +1,39 @@
+---
+- name: "Determine container user uid"
+  ansible.builtin.getent:
+    database: passwd
+    key: vpslite-container
+- name: "Save container user uid as fact"
+  ansible.builtin.set_fact:
+    container_uid: "{{ getent_passwd['vpslite-container'][1] }}"
+- name: "Install unit file for container: {{ name }}"
+  ansible.builtin.template:
+    src: "{{ name }}.container.j2"
+    dest: "/etc/containers/systemd/{{ name }}.container"
+    mode: "0600"
+  notify: "Start or restart container: {{ name }}"
+- name: "Create volumes for container: {{ name }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0700'
+    owner: vpslite-container
+  loop: "{{ create_volumes }}"
+  notify: "Start or restart container: {{ name }}"
+- name: "Populate volume for container: {{ name }}"
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0600"
+    directory_mode: "0700"
+    owner: vpslite-container
+    force: true
+  loop: "{{ drop_files }}"
+  notify: "Start or restart container: {{ name }}"
+- name: "Enable container in systemd: {{ name }}"
+  ansible.builtin.systemd_service:
+    name: "{{ instance_name | default(name) }}.service"
+    enabled: true
+    # Note: actual start/restart is done in the handler (see "notify").
+    daemon_reload: true
+  when: start_service

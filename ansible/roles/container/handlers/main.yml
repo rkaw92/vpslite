@@ -1,0 +1,7 @@
+---
+- name: "Start or restart container: {{ name }}"
+  ansible.builtin.systemd_service:
+    name: "{{ instance_name | default(name) }}.service"
+    state: restarted
+    daemon_reload: true
+  when: start_service

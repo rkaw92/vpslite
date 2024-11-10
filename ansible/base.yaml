@@ -61,26 +61,21 @@
   hosts: all
   vars_files: const/versions.yaml
   tasks:
-    - name: Install unit file for caddy
-      ansible.builtin.template:
-        src: vpslite-caddy.container.j2
-        dest: /etc/containers/systemd/vpslite-caddy.container
-        mode: '0600'
-    - name: Prepare data volume for caddy
-      ansible.builtin.file:
-        path: /srv/volumes/caddy-data
-        state: directory
-        mode: '0700'
-    - name: Prepare config volume for caddy
-      ansible.builtin.file:
-        path: /srv/volumes/caddy-config
-        state: directory
-        mode: '0700'
+    - name: Install Caddy container
+      ansible.builtin.include_role:
+        name: container
+      vars:
+        name: vpslite-caddy
+        create_volumes:
+          - /srv/volumes/caddy-config
+          - /srv/volumes/caddy-data
+        start_service: false
     - name: Make config file for caddy
       ansible.builtin.copy:
         src: Caddyfile
         dest: /srv/volumes/caddy-config/Caddyfile
         mode: '0600'
+        owner: vpslite-container
         force: false
       notify: Restart Caddy
     - name: Make sure caddy image is available

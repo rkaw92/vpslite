@@ -4,6 +4,8 @@ Description=Local Docker registry
 [Container]
 ContainerName=vpslite-registry
 Image={{ ver_registry_image }}
+User={{ container_uid }}
+Group=65534
 Volume=/srv/volumes/registry-data:/var/lib/registry
 Network=web.network:alias=registry
 AutoUpdate=registry

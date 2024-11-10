@@ -1,0 +1,45 @@
+---
+argument_specs:
+  main:
+    short_description: Main entry point for Podman container creation
+    author:
+      - Robert Kawecki
+    options:
+      name:
+        type: str
+        required: true
+        description:
+          - Name of the container unit file, without .container suffix.
+      instance_name:
+        type: str
+        required: false
+        description:
+          - Name of the systemd unit instance file, if different from the unit name. For example, mycontainer@1.
+      create_volumes:
+        type: list
+        elements: str
+        required: false
+        default: []
+        description:
+          - A list of bind-mount volume directory names to create on the host.
+      drop_files:
+        type: list
+        elements: dict
+        required: false
+        default: []
+        options:
+          src:
+            type: str
+            required: true
+            description: "Source file name to drop into the volume"
+          dest:
+            type: str
+            required: true
+            description: "Full destination path to drop into"
+      start_service:
+        type: bool
+        required: false
+        default: true
+        description:
+          - Whether to enable and start the container by default.
+          - Disable this if you need to perform further setup tasks before starting.
