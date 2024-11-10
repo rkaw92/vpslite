@@ -64,10 +64,11 @@
       state: directory
       mode: '0700'
   - name: Make config file for caddy
-    ansible.builtin.file:
-      path: /srv/volumes/caddy-config/Caddyfile
-      state: touch
+    ansible.builtin.copy:
+      src: Caddyfile
+      dest: /srv/volumes/caddy-config/Caddyfile
       mode: '0600'
+      force: false
     register: caddy_conf
   - name: Make sure caddy image is available
     containers.podman.podman_image:
