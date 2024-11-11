@@ -21,10 +21,15 @@
   hosts: all
   vars_files: const/versions.yaml
   tasks:
+    - name: Create system group
+      ansible.builtin.group:
+        name: vpslite
+        system: true
     - name: Create system user for running containers
       ansible.builtin.user:
         name: vpslite-container
         system: true
+        group: vpslite
 
 - name: Podman
   hosts: all

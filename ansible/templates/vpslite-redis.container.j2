@@ -5,8 +5,11 @@ Description=Redis in-memory database
 ContainerName=vpslite-redis
 Image={{ ver_redis_image }}
 Exec=redis-server /usr/local/etc/redis/redis.conf
-User={{ container_uid }}
-Group=65534
+User=redis:redis
+UIDMap=0:65534
+UIDMap=999:{{ container_uid }}
+GIDMap=0:65534
+GIDMap=999:{{ container_gid }}
 Volume=/srv/volumes/redis-data:/data
 Volume=/srv/volumes/redis-config:/usr/local/etc/redis
 Network=infra.network:alias=redis

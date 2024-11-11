@@ -6,6 +6,13 @@
 - name: "Save container user uid as fact"
   ansible.builtin.set_fact:
     container_uid: "{{ getent_passwd['vpslite-container'][1] }}"
+- name: "Determine container group gid"
+  ansible.builtin.getent:
+    database: group
+    key: vpslite
+- name: "Save container group gid as fact"
+  ansible.builtin.set_fact:
+    container_gid: "{{ getent_group['vpslite'][1] }}"
 - name: "Install unit file for container: {{ name }}"
   ansible.builtin.template:
     src: "{{ name }}.container.j2"
@@ -18,6 +25,7 @@
     state: directory
     mode: '0700'
     owner: vpslite-container
+    group: vpslite
   loop: "{{ create_volumes }}"
   notify: "Start or restart container: {{ name }}"
 - name: "Populate volume for container: {{ name }}"
@@ -27,6 +35,7 @@
     mode: "0600"
     directory_mode: "0700"
     owner: vpslite-container
+    group: vpslite
     force: true
   loop: "{{ drop_files }}"
   notify: "Start or restart container: {{ name }}"
