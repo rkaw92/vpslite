@@ -132,5 +132,22 @@ systemctl restart vpslite-app@1
 journalctl -u vpslite-app@1.service
 ```
 
+## Troubleshooting
+
+### Common problems and their solutions
+
+#### Problem: old Ansible (<8.0) on client, Python 2.12+ on server
+**Symptom**: while running some playbooks that rely on ansible.builtin.get_url, you get this error:
+```
+An unknown error occurred: HTTPSConnection.__init__() got an unexpected keyword argument 'cert_file'
+```
+
+**Solution**: Install newest Ansible on the client:
+```sh
+pipx install --include-deps ansible
+# Optionally for development:
+pipx inject --include-apps ansible ansible-lint
+```
+
 ## License
 MIT
