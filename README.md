@@ -75,6 +75,17 @@ ansible-playbook base.yaml
 
 If all goes well, a reverse proxy server should be started, already serving HTTPS on your domain! For now, it will return HTTP 502 Bad Gateway, because we have not deployed the app server yet.
 
+### Deploy the Docker image registry
+
+Edit the configuration file:
+* group_vars/all/registry_vars
+
+Run:
+
+```sh
+ansible-playbook registry.yaml
+```
+
 You should now be able to do:
 ```
 docker login <myrepositorydomain>
@@ -94,9 +105,9 @@ For an example Dockerfile that can be used for building a working Node.js app, s
 
 ### Run the app deployment playbook
 
-First, edit `group_vars/all/app_vars` to point to the app image. Use the fully-qualified image name, like in the example.
+First, edit `group_vars/all/app_vars` to point to the app image. Use the fully-qualified image name, like in the shipped example.
 
-```
+```sh
 ansible-playbook app.yaml
 ```
 
