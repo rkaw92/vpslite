@@ -81,6 +81,7 @@
         dest: /srv/volumes/caddy-config/Caddyfile
         mode: '0600'
         owner: vpslite-container
+        group: vpslite
         force: false
       notify: Restart Caddy
     - name: Make sure caddy image is available
