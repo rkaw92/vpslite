@@ -1,0 +1,33 @@
+---
+- name: "Make sure unzip is installed"
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+- name: "Prepare directory for AWS CLI download"
+  ansible.builtin.file:
+    path: "/root/awscli"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+- name: "Download AWS CLI install script"
+  ansible.builtin.get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    dest: "/root/awscli/awscliv2.zip"
+    mode: "0600"
+- name: "Unpack AWS CLI install script"
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: "/root/awscli/awscliv2.zip"
+    dest: "/root/awscli"
+    creates: "/root/awscli/aws"
+- name: "Run AWS CLI install"
+  ansible.builtin.command:
+    chdir: "/root/awscli"
+    creates: "/usr/local/aws-cli"
+    argv:
+      - "./aws/install"
+      - "--bin-dir"
+      - "/usr/local/bin"
+      - "--install-dir"
+      - "/usr/local/aws-cli"
