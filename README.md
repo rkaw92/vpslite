@@ -128,7 +128,9 @@ systemctl restart vpslite-app@1
 
 ### Logs
 
-... TBD
+```sh
+journalctl -u vpslite-app@1.service
+```
 
 ## License
 MIT
