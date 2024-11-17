@@ -11,9 +11,14 @@
         src: vpslite-app@.container.j2
         dest: /etc/containers/systemd/vpslite-app@.container
         mode: '0600'
-    - name: Enable app service in systemd
+    - name: Install target file for managing app instances
+      ansible.builtin.copy:
+        src: vpslite-app.target
+        dest: /etc/systemd/system/vpslite-app.target
+        mode: '0600'
+    - name: Enable app target in systemd
       ansible.builtin.systemd_service:
-        name: vpslite-app@1.service
+        name: vpslite-app.target
         enabled: true
         state: started
         daemon_reload: true

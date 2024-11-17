@@ -1,5 +1,6 @@
 [Unit]
 Description=Self-hosted app
+PartOf=vpslite-app.target
 
 [Container]
 ContainerName=vpslite-app-%i
@@ -10,6 +11,3 @@ Pull=never
 
 [Service]
 Restart=always
-
-[Install]
-WantedBy=multi-user.target

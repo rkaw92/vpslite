@@ -1,0 +1,6 @@
+[Unit]
+Description=Self-hosted app instances
+Requires=vpslite-app@1.service
+
+[Install]
+WantedBy=multi-user.target
