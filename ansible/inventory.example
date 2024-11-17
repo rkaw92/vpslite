@@ -1,2 +1,7 @@
 [vpslite]
-1.2.3.4 ansible_user=root
+# Option A: use sudo (default on Ubuntu)
+1.2.3.4 ansible_user=ubuntu ansible_become=true
+
+# Option B: login over ssh as the root user
+# (needs PermitRootLogin without-password in /etc/sshd/sshd_config):
+#1.2.3.4 ansible_user=root
