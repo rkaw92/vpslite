@@ -1,0 +1,12 @@
+---
+argument_specs:
+  main:
+    short_description: Main entry point for drop-in backup providers
+    author:
+      - Robert Kawecki
+    options:
+      backup_provider_name:
+        type: str
+        required: true
+        description:
+          - Name of the backup provider. A corresponding file needs to be added to files/backup.d/ .

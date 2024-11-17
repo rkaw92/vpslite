@@ -1,0 +1,22 @@
+#!/bin/bash
+
+## This is user-editable configuration for the backup script.
+# This variable is populated automatically on deploy, but you can always change it.
+CONF_BUCKET="{{ backup_s3_bucket }}"
+
+# Prefix path for the destination files.
+# For S3 and Backblaze B2, use at least the bucket name.
+# NOTE: You MUST include the trailing slash if this is non-empty, because we concatenate it with the file name.
+CONF_PREFIX="vpslite-backup/"
+
+# File overwriting mode:
+# - same: Write each subsequent backup to the same file on the destination.
+#     Use this mode together with versioning and retention on object storage.
+# - new: Write each backup to a new file name.
+#    Use this mode if your backup target doesn't let you access old versions of the same file.
+#    In this mode, files can pile up, so make sure you've set file expiry or can reliably delete old files.
+CONF_FILE_MODE="same"
+
+# Zstd compression level flag.
+# Use "-3" for a lower CPU usage and bigger backups.
+CONF_ZSTD_FLAGS="-9"

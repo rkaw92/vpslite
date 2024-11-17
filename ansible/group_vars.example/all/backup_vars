@@ -1,0 +1,14 @@
+# Example for Backblaze B2 - check your endpoint on the bucket view in the GUI.
+# If using AWS S3, leave this empty or delete the variable altogether.
+backup_s3_endpoint_url: "https://s3.us-west-004.backblazeb2.com"
+# Example for Backblaze B2 - copy/paste this part from the S3-compatible endpoint URL like above.
+# For AWS S3, use the bucket's region.
+backup_s3_region: "us-west-004"
+# Access credentials - Access Key ID
+# This key needs write access to the configured bucket.
+# It is best to use a dedicated key with limited privileges.
+backup_s3_access_key_id: "01234567examplekeyid"
+# Access credentials - Secret Access Key.
+backup_s3_secret_access_key: "K000exampleaccesskey"
+# Bucket name for writing backup files to.
+backup_s3_bucket: "mybackups"

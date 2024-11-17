@@ -1,0 +1,73 @@
+---
+- name: Setup backup dependencies
+  hosts: all
+  vars_files: const/versions.yaml
+  tasks:
+    - name: Install AWS CLI
+      ansible.builtin.include_role:
+        name: awscli
+    - name: Ensure aws config dir exists
+      ansible.builtin.file:
+        path: "/root/.aws"
+        state: directory
+        mode: "0700"
+    - name: Configure S3 access - config
+      ansible.builtin.blockinfile:
+        path: "/root/.aws/config"
+        create: true
+        mode: "0600"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - vpslite backup"
+        block: |
+          [profile vpslite]
+          region = {{ backup_s3_region }}
+          {% if backup_s3_endpoint_url and backup_s3_endpoint_url %}
+          endpoint_url = {{ backup_s3_endpoint_url }}
+          {% endif %}
+    - name: Configure S3 access - credentials
+      ansible.builtin.blockinfile:
+        path: "/root/.aws/credentials"
+        create: true
+        mode: "0600"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - vpslite backup"
+        block: |
+          [vpslite]
+          aws_access_key_id = {{ backup_s3_access_key_id }}
+          aws_secret_access_key = {{ backup_s3_secret_access_key }}
+- name: Install backup script
+  hosts: all
+  vars_files: const/versions.yaml
+  tasks:
+    - name: Prepare backup system directory
+      ansible.builtin.file:
+        path: /srv/backup
+        state: directory
+        mode: "0755"
+    - name: Prepare tempfile directory for backups
+      ansible.builtin.file:
+        path: /srv/backup/tmp
+        state: directory
+        mode: "0700"
+    - name: Prepare directory for backup providers
+      ansible.builtin.file:
+        path: /srv/backup.d
+        state: directory
+        mode: "0700"
+    - name: Copy backup scripts
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "0755"
+      loop:
+        - src: backup.sh
+          dest: /srv/backup/backup.sh
+        - src: restore.sh
+          dest: /srv/backup/restore.sh
+        - src: .backup-upload.sh
+          dest: /srv/backup/.backup-upload.sh
+        - src: .backup-download.sh
+          dest: /srv/backup/.backup-download.sh
+    - name: Prepare backup config file
+      ansible.builtin.template:
+        src: ".backuprc.j2"
+        dest: /srv/backup/.backuprc
+        mode: "0700"

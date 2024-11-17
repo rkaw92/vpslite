@@ -1,0 +1,13 @@
+---
+- name: "Ensure backup providers directory exists"
+  ansible.builtin.file:
+    path: /srv/backup.d
+    state: directory
+    owner: root
+    group: vpslite
+    mode: "0700"
+- name: "Drop in backup provider: {{ backup_provider_name }}"
+  ansible.builtin.copy:
+    src: "backup.d/{{ backup_provider_name }}"
+    dest: "/srv/backup.d/{{ backup_provider_name }}"
+    mode: "0700"

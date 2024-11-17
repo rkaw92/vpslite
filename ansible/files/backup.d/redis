@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e -u -o pipefail
+shopt -s nullglob
+
+case "$1" in
+  "list")
+    for DUMPFILE in /srv/volumes/redis-data/*.rdb; do
+      # Usually this will just print "dump".
+      basename "$DUMPFILE" ".rdb"
+    done;
+    ;;
+  "backup")
+    [ -n "$2" ] || exit 1
+    podman exec vpslite-redis redis-cli SAVE >/dev/null 2>&1
+    cat "/srv/volumes/redis-data/${2}.rdb"
+    ;;
+  "restore")
+    [ -n "$2" ] || exit 1
+    systemctl stop vpslite-redis
+    cat >"/srv/volumes/redis-data/${2}.rdb"
+    chown vpslite-container:vpslite "/srv/volumes/redis-data/${2}.rdb"
+    systemctl start vpslite-redis
+esac
