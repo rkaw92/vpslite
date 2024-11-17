@@ -1,0 +1,7 @@
+[Unit]
+Description="Automatic data backup"
+
+[Service]
+Type=oneshot
+ExecStart=/srv/backup/backup.sh
+WorkingDirectory=/srv/backup

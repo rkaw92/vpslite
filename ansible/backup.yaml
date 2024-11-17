@@ -71,3 +71,19 @@
         src: ".backuprc.j2"
         dest: /srv/backup/.backuprc
         mode: "0700"
+    - name: Install backup unit file
+      ansible.builtin.copy:
+        src: vpslite-backup.service
+        dest: /etc/systemd/system/vpslite-backup.service
+        mode: "0600"
+    - name: Install backup timer file ("cron")
+      ansible.builtin.copy:
+        src: vpslite-backup.timer
+        dest: /etc/systemd/system/vpslite-backup.timer
+        mode: "0600"
+    - name: Enable backup timer
+      ansible.builtin.systemd_service:
+        name: vpslite-backup.timer
+        enabled: true
+        state: started
+        daemon_reload: true
