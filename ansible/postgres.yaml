@@ -1,0 +1,20 @@
+- name: Postgres
+  hosts: all
+  vars_files: const/versions.yaml
+  tasks:
+    - name: Create postgres container unit file
+      ansible.builtin.include_role:
+        name: container
+      vars:
+        container_name: vpslite-postgres
+        container_create_volumes:
+          - /srv/volumes/postgres-config
+          - /srv/volumes/postgres-data
+        container_drop_files:
+          - src: postgresql.conf
+            dest: /srv/volumes/postgres-config/postgresql.conf
+    - name: Install backup provider for postgres
+      ansible.builtin.include_role:
+        name: backup_provider
+      vars:
+        backup_provider_name: postgres

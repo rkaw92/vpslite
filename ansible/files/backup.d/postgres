@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e -u -o pipefail
+shopt -s nullglob
+
+case "$1" in
+  "list")
+  printf "GLOBALS\n"
+    podman exec vpslite-postgres psql -t --csv -c "SELECT datname FROM pg_database" | while read DBNAME; do
+      [ "$DBNAME" = "template0" ] && continue
+      printf "${DBNAME}\n"
+    done
+    ;;
+  "backup")
+    [ -n "$2" ] || exit 1
+    if [ "$2" = "GLOBALS" ]; then
+        podman exec vpslite-postgres pg_dumpall --globals-only --clean
+    else
+        podman exec vpslite-postgres pg_dump --clean --create "$2"
+    fi
+    ;;
+  "restore")
+    [ -n "$2" ] || exit 1
+    podman exec -i vpslite-postgres psql
+esac

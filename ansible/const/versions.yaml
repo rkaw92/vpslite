@@ -2,3 +2,4 @@
 ver_caddy_image: docker.io/library/caddy:2.8-alpine
 ver_registry_image: docker.io/library/registry:2
 ver_redis_image: docker.io/library/redis:7.4
+ver_postgres_image: docker.io/library/postgres:17

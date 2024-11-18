@@ -1,0 +1,4 @@
+# Password to set for the "postgres" superuser initially.
+# NOTE: This password will be stored in /etc/containers/systemd/vpslite-postgres.container in plaintext.
+# You can change it later in psql.
+postgres_password: CHANGEME

@@ -1,0 +1,24 @@
+[Unit]
+Description=PostgreSQL database server
+
+[Container]
+ContainerName=vpslite-postgres
+Image={{ ver_postgres_image }}
+Exec=postgres -c "config_file=/etc/postgresql/postgresql.conf"
+User=postgres:postgres
+UIDMap=0:65534
+UIDMap=999:{{ container_uid }}
+GIDMap=0:65534
+GIDMap=999:{{ container_gid }}
+Volume=/srv/volumes/postgres-data:/var/lib/postgresql/data
+Volume=/srv/volumes/postgres-config/postgresql.conf:/etc/postgresql/postgresql.conf
+Network=infra.network:alias=postgres
+AutoUpdate=registry
+Environment=POSTGRES_PASSWORD={{ postgres_password }}
+Environment=PGDATA=/var/lib/postgresql/data/pgdata
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
