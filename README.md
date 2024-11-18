@@ -273,7 +273,7 @@ systemctl status vpslite-backup.timer
 
 The backup script produces a TSV report file each time it runs (like CSV, but tab-separated). To read it:
 ```sh
-cat /srv/backup/lastbackup.report.tsv
+column -t /srv/backup/lastbackup.report.tsv
 ```
 
 The last column is the exit code of the backup process. It should always be zero!
