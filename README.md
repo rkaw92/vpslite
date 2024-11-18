@@ -10,17 +10,9 @@ This project lets you run a containerized application on a cheap Virtual Private
 
 Features:
 
-[HTTPS reverse proxy](#base) | [Docker image registry](#docker-image-registry) | [App deployment](#app-deployment) | [Redis](#redis) | [Automatic daily backup](#backup)
+[HTTPS reverse proxy](#base) | [Docker image registry](#docker-image-registry) | [App deployment](#app-deployment) | [Redis](#redis) | [Automatic daily backup](#backup) | [Security updates](#security-updates)
 
 **This is a work in progress. It works, but I'm still polishing some stuff around the edges.**
-
-Out-of-the-box, it gives you:
-* Reverse proxy with automatic HTTPS and certificate renewal
-* Private Docker registry
-* App deployment via Docker images
-* Virtual networking to avoid exposing your containers to the world
-* Container management and auto-restart via systemd unit files
-* Automatic system updates for peace of mind
 
 ![architecture diagram](vpslite.drawio.png)
 
