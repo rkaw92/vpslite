@@ -13,22 +13,22 @@
 - name: "Save container group gid as fact"
   ansible.builtin.set_fact:
     container_gid: "{{ getent_group['vpslite'][1] }}"
-- name: "Install unit file for container: {{ name }}"
+- name: "Install unit file for container: {{ container_name }}"
   ansible.builtin.template:
-    src: "{{ name }}.container.j2"
-    dest: "/etc/containers/systemd/{{ name }}.container"
+    src: "{{ container_name }}.container.j2"
+    dest: "/etc/containers/systemd/{{ container_name }}.container"
     mode: "0600"
-  notify: "Start or restart container: {{ name }}"
-- name: "Create volumes for container: {{ name }}"
+  notify: "Start or restart container: {{ container_name }}"
+- name: "Create volumes for container: {{ container_name }}"
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0700'
     owner: vpslite-container
     group: vpslite
-  loop: "{{ create_volumes }}"
-  notify: "Start or restart container: {{ name }}"
-- name: "Populate volume for container: {{ name }}"
+  loop: "{{ container_create_volumes }}"
+  notify: "Start or restart container: {{ container_name }}"
+- name: "Populate volume for container: {{ container_name }}"
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -37,12 +37,12 @@
     owner: vpslite-container
     group: vpslite
     force: true
-  loop: "{{ drop_files }}"
-  notify: "Start or restart container: {{ name }}"
-- name: "Enable container in systemd: {{ name }}"
+  loop: "{{ container_drop_files }}"
+  notify: "Start or restart container: {{ container_name }}"
+- name: "Enable container in systemd: {{ container_name }}"
   ansible.builtin.systemd_service:
-    name: "{{ instance_name | default(name) }}.service"
+    name: "{{ container_instance_name | default(container_name) }}.service"
     enabled: true
     # Note: actual start/restart is done in the handler (see "notify").
     daemon_reload: true
-  when: start_service
+  when: container_start_service

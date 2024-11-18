@@ -70,11 +70,11 @@
       ansible.builtin.include_role:
         name: container
       vars:
-        name: vpslite-caddy
-        create_volumes:
+        container_name: vpslite-caddy
+        container_create_volumes:
           - /srv/volumes/caddy-config
           - /srv/volumes/caddy-data
-        start_service: false
+        container_start_service: false
     - name: Make config file for caddy
       ansible.builtin.copy:
         src: Caddyfile

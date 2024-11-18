@@ -5,24 +5,24 @@ argument_specs:
     author:
       - Robert Kawecki
     options:
-      name:
+      container_name:
         type: str
         required: true
         description:
           - Name of the container unit file, without .container suffix.
-      instance_name:
+      container_instance_name:
         type: str
         required: false
         description:
           - Name of the systemd unit instance file, if different from the unit name. For example, mycontainer@1.
-      create_volumes:
+      container_create_volumes:
         type: list
         elements: str
         required: false
         default: []
         description:
           - A list of bind-mount volume directory names to create on the host.
-      drop_files:
+      container_drop_files:
         type: list
         elements: dict
         required: false
@@ -36,7 +36,7 @@ argument_specs:
             type: str
             required: true
             description: "Full destination path to drop into"
-      start_service:
+      container_start_service:
         type: bool
         required: false
         default: true

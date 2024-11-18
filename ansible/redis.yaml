@@ -6,11 +6,11 @@
       ansible.builtin.include_role:
         name: container
       vars:
-        name: vpslite-redis
-        create_volumes:
+        container_name: vpslite-redis
+        container_create_volumes:
           - /srv/volumes/redis-config
           - /srv/volumes/redis-data
-        drop_files:
+        container_drop_files:
           - src: redis.conf
             dest: /srv/volumes/redis-config/redis.conf
     - name: Install backup provider for redis
