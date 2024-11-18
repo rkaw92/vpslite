@@ -88,6 +88,8 @@ Note: if you stop a container using `podman stop`, it will be re-created by syst
 To manage container lifecycle, use `systemctl stop/start/restart <unitname>`  
 To disable/enable a container, use `systemctl disable/enable <unitname>`
 
+---
+
 ### Docker image registry
 
 Edit the configuration file according to comments:
@@ -120,6 +122,8 @@ docker push <myrepositorydomain>/<myimage>:latest
 The application must run HTTP on port 3000. Additionally, the Dockerfile should include an EXPOSE statement for the port. This is where the reverse proxy will connect.
 
 For an example Dockerfile that can be used for building a working Node.js app, see the directory `app-example`.
+
+---
 
 ### App deployment
 
@@ -180,6 +184,8 @@ systemctl start vpslite-app.target
 Note: this will not stop running app instances.  
 To scale down, run: `systemctl stop vpslite-app@<number>.service`
 
+---
+
 ### Redis
 
 Run:
@@ -203,6 +209,8 @@ systemctl restart vpslite-redis.service
 This database includes backup hooks. It produces one backupable item, `dump`, based on the RDB file of complete DB contents. An Append-Only File is not used.
 
 Restoring the database requires a restart to replace the dump file with the version from backup.
+
+---
 
 ### Backup
 
