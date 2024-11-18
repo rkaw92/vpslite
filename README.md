@@ -16,6 +16,11 @@ Features:
 
 ![architecture diagram](vpslite.drawio.png)
 
+## Operating system support
+
+For now, the only tested server operating system is **Ubuntu 24.04 LTS**.  
+
+This has also been tested with Debian GNU/Linux 12 (bookworm) as the client, but it requires a newer Ansible version - the version from the bookworm repo uses deprecated Python 3 features which are gone in Ubuntu 24.04's Python 3.12 (see [solution](#common-problems-and-their-solutions)).
 
 ## Install
 First, clone or download this repository:
@@ -26,7 +31,7 @@ git clone https://github.com/rkaw92/vpslite.git
 
 ---
 
-If Ansible is not installed, you need to install it now.
+If **Ansible** is not installed, you need to install it now.
 <details>
     <summary>Click to show Ansible install instructions</summary>
 
@@ -40,7 +45,7 @@ pipx inject --include-apps ansible ansible-lint
 
 ---
 
-Get the additional required modules:
+Get the additional required modules from Ansible Galaxy:
 ```sh
 cd vpslite/ansible
 ansible-galaxy install -r roles/requirements.yml
@@ -56,9 +61,24 @@ cp inventory.example inventory
 cp -r group_vars.example group_vars
 ```
 
+### Point to your VPS
+
+Edit the file:
+* `inventory`
+
+Change the example IP address to your VPS' IP or DNS hostname.
+Before running any playbook, make sure you can connect:
+```sh
+ssh username@<your_vps_host>
+```
+
+Do this at least once to avoid being asked about SSH host key verification.
+
 ## Modules
 
 ### Base
+
+**This module must be run before anything else.**
 
 Installs and configures the basics:
 * `podman` (for container hosting)
@@ -91,6 +111,11 @@ To disable/enable a container, use `systemctl disable/enable <unitname>`
 ---
 
 ### Docker image registry
+
+Prerequisites:
+* DNS A record (**domain name**) that points to your VPS
+    * Has to be different from the app hosting domain (similar to how GitHub uses ghcr.io instead of github.com)
+    * It can be a subdomain - for example, this works: `registry.example.com`
 
 Edit the configuration file according to comments:
 * `group_vars/all/registry_vars`
@@ -126,6 +151,11 @@ For an example Dockerfile that can be used for building a working Node.js app, s
 ---
 
 ### App deployment
+
+Prerequisites:
+* DNS A record (**domain name**) that points to your VPS
+    * Has to be different from the [image registry](#docker-image-registry) domain name
+    * It may be a subdomain - both `example.com` and `app.example.com` can work
 
 Edit the configuration file according to comments:
 * `group_vars/all/app_vars`
