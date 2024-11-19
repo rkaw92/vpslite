@@ -10,7 +10,7 @@ This project lets you run a containerized application on a cheap Virtual Private
 
 Features:
 
-[HTTPS reverse proxy](#base) | [Docker image registry](#docker-image-registry) | [App deployment](#app-deployment) | [Redis](#redis) | [Automatic daily backup](#backup) | [Security updates](#security-updates)
+[HTTPS reverse proxy](#base) | [Docker image registry](#docker-image-registry) | [App deployment](#app-deployment) | [PostgreSQL](#postgresql) | [Redis](#redis) | [Automatic daily backup](#backup) | [Security updates](#security-updates)
 
 **This is a work in progress. It works, but I'm still polishing some stuff around the edges.**
 
@@ -215,6 +215,46 @@ Note: this will not stop running app instances.
 To scale down, run: `systemctl stop vpslite-app@<number>.service`
 
 ---
+
+
+### PostgreSQL
+
+Edit (set the superuser password):
+* `group_vars/all/postgres_vars`
+
+Run:
+```sh
+ansible-playbook postgres.yaml
+```
+
+Now, any container with access to the infra network (for example the `app` container) should be able to resolve the database host by the DNS name `postgres`.
+
+### Enter psql
+
+```sh
+podman exec -it vpslite-postgres psql
+```
+
+#### Configuration
+
+You can edit the Postgres config file: `/srv/volumes/postgres-config/postgresql.conf`
+
+#### Backup: postgres
+
+This database includes backup hooks. It produces:
+* one item per database - so that each database is backed up separately
+* plus one "GLOBAL" item with roles and other objects that don't belong to any database
+
+Restores are on-line and destructive (drops and re-creates the restored DB).  
+For example, this:
+
+```sh
+cd /srv/backup
+./restore.sh s3://<mybackups>/vpslite-backup/backup_postgres_mydb.zst postgres mydb
+```
+
+will completely DROP and CREATE DATABASE `mydb`.  
+Also note that the last argument to restore does not matter for the postgres provider - the target database name is baked into the backup file, so you cannot dump `db1` and restore as `db2`.
 
 ### Redis
 
